@@ -1,15 +1,20 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
-
-require("dotenv").config();
+const carRoutes = require("./routes/carRoutes");
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+app.use("/api/cars", carRoutes);
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Mongo Connected");
+    app.listen(5000, () => console.log("Server running on port 5000"));
+  })
+  .catch(err => console.log(err));
