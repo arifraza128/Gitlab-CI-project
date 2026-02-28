@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - carhub-net
+
+  backend:
+    build: ./backend
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/carhub
+    depends_on:
+      - mongo
+    networks:
+      - carhub-net
+
+  frontend:
+    build: ./frontend
+    networks:
+      - carhub-net
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - carhub-net
+
+volumes:
+  mongo_data:
+
+networks:
+  carhub-net:
