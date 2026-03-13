@@ -18,9 +18,7 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-# =========================
-# BUILD STAGE
-# =========================
+
 build_frontend:
   stage: build
   script:
@@ -31,35 +29,27 @@ build_backend:
   script:
     - echo "Backend build skipped in docker runner"
 
-# =========================
-# TEST STAGE
-# =========================
+
 test_backend:
   stage: test
   script:
     - echo "Add tests later"
 
-# =========================
-# DOCKER BUILD
-# =========================
+
 docker_build:
   stage: docker_build
   script:
     - docker build -t $CI_REGISTRY_IMAGE/frontend:$IMAGE_TAG frontend/
     - docker build -t $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG backend/
 
-# =========================
-# PUSH
-# =========================
+
 push_images:
   stage: push
   script:
     - docker push $CI_REGISTRY_IMAGE/frontend:$IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
 
-# =========================
-# DEPLOY TO DEV (AUTO)
-# =========================
+
 deploy_dev:
   stage: deploy
   only:
@@ -67,9 +57,7 @@ deploy_dev:
   script:
     - echo "Deploying to staging server"
 
-# =========================
-# DEPLOY TO PRODUCTION (MANUAL)
-# =========================
+
 deploy_prod:
   stage: deploy
   only:
